@@ -1,0 +1,145 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Guild {
+  id          String       @id
+  name        String
+  createdAt   DateTime     @default(now())
+  GuildConfig GuildConfig?
+  GuildUser   GuildUser[]
+  Todo        Todo[]
+}
+
+model GuildConfig {
+  id              Int     @id @default(autoincrement())
+  guildId         String  @unique
+  prefix          String  @default("/")
+  language        String  @default("en")
+  learningEnabled Boolean @default(true)
+  pomodoroEnabled Boolean @default(true)
+  Guild           Guild   @relation(fields: [guildId], references: [id])
+}
+
+model GuildUser {
+  guildId  String
+  userId   String
+  joinedAt DateTime @default(now())
+  User     User     @relation(fields: [userId], references: [id])
+  Guild    Guild    @relation(fields: [guildId], references: [id])
+
+  @@id([guildId, userId])
+}
+
+model LearningPage {
+  id              Int              @id @default(autoincrement())
+  sectionId       Int
+  slug            String
+  title           String
+  content         String
+  emphasis        String?
+  createdAt       DateTime         @default(now())
+  LearningSection LearningSection  @relation(fields: [sectionId], references: [id])
+  LearningReview  LearningReview[]
+
+  @@unique([sectionId, slug])
+}
+
+model LearningReview {
+  id             Int          @id @default(autoincrement())
+  pageId         Int
+  userId         String
+  lastReviewedAt DateTime     @default(now())
+  nextReviewAt   DateTime?
+  confidence     Int?
+  User           User         @relation(fields: [userId], references: [id])
+  LearningPage   LearningPage @relation(fields: [pageId], references: [id])
+
+  @@unique([pageId, userId])
+}
+
+model LearningSection {
+  id            Int            @id @default(autoincrement())
+  topicId       Int
+  slug          String
+  title         String
+  createdAt     DateTime       @default(now())
+  LearningPage  LearningPage[]
+  LearningTopic LearningTopic  @relation(fields: [topicId], references: [id])
+
+  @@unique([topicId, slug])
+}
+
+model LearningTopic {
+  id              Int               @id @default(autoincrement())
+  userId          String?
+  isGlobal        Boolean           @default(false)
+  slug            String
+  title           String
+  description     String?
+  createdAt       DateTime          @default(now())
+  LearningSection LearningSection[]
+  User            User?             @relation(fields: [userId], references: [id])
+
+  @@unique([slug, userId])
+}
+
+model Pomodoro {
+  id          Int       @id @default(autoincrement())
+  userId      String
+  duration    Int
+  startedAt   DateTime  @default(now())
+  endedAt     DateTime?
+  interrupted Boolean   @default(false)
+  User        User      @relation(fields: [userId], references: [id])
+}
+
+model Standup {
+  id      Int      @id @default(autoincrement())
+  content String
+  date    DateTime @default(now())
+  userId  String
+  guildId String?
+  User    User     @relation(fields: [userId], references: [id])
+}
+
+model Todo {
+  id          Int       @id @default(autoincrement())
+  guildId     String?
+  userId      String
+  title       String
+  description String?
+  done        Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  completedAt DateTime?
+  Guild       Guild?    @relation(fields: [guildId], references: [id])
+  User        User      @relation(fields: [userId], references: [id])
+}
+
+model User {
+  id             String           @id
+  username       String
+  avatar         String?
+  createdAt      DateTime         @default(now())
+  GuildUser      GuildUser[]
+  LearningReview LearningReview[]
+  LearningTopic  LearningTopic[]
+  Pomodoro       Pomodoro[]
+  Standup        Standup[]
+  Todo           Todo[]
+  UserSettings   UserSettings?
+}
+
+model UserSettings {
+  id                   Int     @id @default(autoincrement())
+  userId               String  @unique
+  language             String  @default("en")
+  timezone             String  @default("UTC")
+  notificationsEnabled Boolean @default(true)
+  User                 User    @relation(fields: [userId], references: [id])
+}

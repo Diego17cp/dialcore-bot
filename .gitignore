@@ -15,3 +15,9 @@ dist/
 package-lock.json
 yarn.lock
 pnpm-lock.yaml
+
+# Generated Prisma Client
+/generated/prisma
+
+# SQLite database file
+db/dev.db

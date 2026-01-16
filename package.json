@@ -2,10 +2,14 @@
   "name": "dialcore-bot",
   "version": "0.1.0",
   "description": "",
+  "type": "module",
   "main": "src/index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "tsnd -r tsconfig-paths/register --respawn --transpile-only src/index.ts"
+    "dev": "tsx watch src/index.ts tsconfig-paths/register",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:studio": "prisma studio"
   },
   "keywords": [],
   "author": "Dialcadev",
@@ -13,9 +17,17 @@
   "packageManager": "pnpm@10.8.1",
   "devDependencies": {
     "@types/node": "25.0.8",
-    "ts-node-dev": "2.0.0",
+    "prisma": "7.2.0",
     "tsc-alias": "1.8.16",
     "tsconfig-paths": "4.2.0",
+    "tsx": "4.21.0",
     "typescript": "5.9.3"
+  },
+  "dependencies": {
+    "@prisma/adapter-libsql": "7.2.0",
+    "@prisma/client": "7.2.0",
+    "discord.js": "14.25.1",
+    "dotenv": "17.2.3",
+    "zod": "4.3.5"
   }
 }
