@@ -8,12 +8,13 @@ datasource db {
 }
 
 model Guild {
-  id          String       @id
-  name        String
-  createdAt   DateTime     @default(now()) @map("created_at")
-  GuildConfig GuildConfig?
-  GuildUser   GuildUser[]
-  Todo        Todo[]
+  id            String          @id
+  name          String
+  createdAt     DateTime        @default(now()) @map("created_at")
+  GuildConfig   GuildConfig?
+  GuildUser     GuildUser[]
+  Todo          Todo[]
+  LearningTopic LearningTopic[]
 
   @@map("guilds")
 }
@@ -86,15 +87,16 @@ model LearningSection {
 model LearningTopic {
   id              Int               @id @default(autoincrement())
   userId          String?           @map("user_id")
-  isGlobal        Boolean           @default(false) @map("is_global")
+  guildId         String?           @map("guild_id")
   slug            String
   title           String
   description     String?
   createdAt       DateTime          @default(now()) @map("created_at")
   LearningSection LearningSection[]
   User            User?             @relation(fields: [userId], references: [id])
+  Guild           Guild?            @relation(fields: [guildId], references: [id])
 
-  @@unique([slug, userId])
+  @@unique([slug, userId, guildId])
   @@map("learning_topics")
 }
 
