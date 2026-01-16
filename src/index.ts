@@ -1,0 +1,32 @@
+import { Client, GatewayIntentBits, Partials } from "discord.js";
+import { DatabaseConnection, env } from "./config";
+
+const start = async () => {
+    try {
+        console.log("Application started.");
+        const client = new Client({
+            intents: [
+                GatewayIntentBits.Guilds,
+                GatewayIntentBits.GuildMessages,
+                GatewayIntentBits.MessageContent
+            ],
+            partials: [Partials.Channel]
+        })
+
+        await DatabaseConnection.getInstance().connect();
+        console.log(DatabaseConnection.getInstance().getStatus());
+
+        client.once("clientReady", () => {
+            console.log(`Logged in as ${client.user?.tag}`);
+            console.log(`Serving ${client.guilds.cache.size} guild(s)`);
+        });
+
+        await client.login(env.DISCORD_TOKEN);
+        
+        console.log("Dialcore Bot is running.");
+    } catch (error) {
+        console.error("Error during application startup:", error);
+        process.exit(1);
+    }
+}
+start();
