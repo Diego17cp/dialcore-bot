@@ -6,5 +6,6 @@ export const env = {
     DATABASE_URL: process.env.DATABASE_URL || "",
     DISCORD_TOKEN: process.env.DISCORD_TOKEN || "",
     APP_ID: process.env.APP_ID || "",
-    NODE_ENV: process.env.NODE_ENV || "development"
+    NODE_ENV: process.env.NODE_ENV || "development",
+    ADMIN_USER_IDS: process.env.ADMIN_USER_IDS ? process.env.ADMIN_USER_IDS.split(",") : [],
 }
