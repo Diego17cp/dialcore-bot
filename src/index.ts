@@ -1,9 +1,13 @@
 import { Client, GatewayIntentBits, Partials } from "discord.js";
 import { DatabaseConnection, env } from "./config";
+import { handleLearnCommand } from "./modules/learning/commands";
+import { registerCommands } from "./scripts/register-commands";
+import { startReviewScheduler } from "./core";
 
 const start = async () => {
     try {
         console.log("Application started.");
+        await registerCommands();
         const client = new Client({
             intents: [
                 GatewayIntentBits.Guilds,
@@ -19,7 +23,12 @@ const start = async () => {
         client.once("clientReady", () => {
             console.log(`Logged in as ${client.user?.tag}`);
             console.log(`Serving ${client.guilds.cache.size} guild(s)`);
-        });
+            startReviewScheduler(client);
+        },);
+        client.on("interactionCreate", async (interaction) => {
+            if (!interaction.isChatInputCommand()) return;
+            if (interaction.commandName === "learn") await handleLearnCommand(interaction);
+        })
 
         await client.login(env.DISCORD_TOKEN);
         
