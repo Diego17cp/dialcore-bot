@@ -30,7 +30,10 @@ export const handleSectionCommand = async(interaction: ChatInputCommandInteracti
         const newTitle = interaction.options.getString("title", false);
         const section = await learning.sections.getSectionBySlug(userId, guildId, topic, sectionSlug);
         if (!section) {
-            return await interaction.reply(`Section "${sectionSlug}" not found in topic "${topic}".`);
+            return await interaction.reply({
+                embeds: [learningEmbeds.sectionNotFound(topic, sectionSlug)],
+                flags: "Ephemeral"
+            });
         }
         const fields = [];
         if (newTitle && newTitle !== section.title) {
