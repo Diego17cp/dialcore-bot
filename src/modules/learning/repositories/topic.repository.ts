@@ -24,7 +24,11 @@ export class TopicRepository {
 				slug,
 			},
 			include: {
-				LearningSection: true,
+				LearningSection: {
+					include: {
+						LearningPage: true,
+					}
+				},
 			},
 		});
 	}
