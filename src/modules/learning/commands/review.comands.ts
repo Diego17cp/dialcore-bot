@@ -1,5 +1,6 @@
 import { ChatInputCommandInteraction } from "discord.js";
 import { LearningService } from "../services";
+import { learningEmbeds } from "@/ui";
 
 const learning = new LearningService();
 
@@ -14,14 +15,20 @@ export const handleReviewCommand = async (
 	if (sub === "next") {
 		const reviews = await learning.reviews.listDueReviews(userId, guildId);
 		if (reviews.length === 0) {
-			return await interaction.reply(
-				"You have no reviews due right now.",
-			);
+			return await interaction.reply({
+				embeds: [learningEmbeds.noDueReviews()],
+				flags: "Ephemeral",
+			});
 		}
 		const review = reviews[0];
-		return await interaction.reply(
-			`Your next review is for page "${review?.LearningPage.title}" in section "${review?.LearningPage.LearningSection.title}" of topic "${review?.LearningPage.LearningSection.LearningTopic.title}".\n\nContent:\n${review?.LearningPage.content}`,
-		);
+		return await interaction.reply({
+			embeds: [learningEmbeds.nextReview(
+				review?.LearningPage.title || "",
+				review?.LearningPage.LearningSection.title || "", 
+				review?.LearningPage.LearningSection.LearningTopic.title || "", 
+				review?.LearningPage.content || ""
+			)],
+		});
 	}
     if (sub === "rate") {
         const topicSlug = interaction.options.getString("topic", true);
@@ -30,9 +37,20 @@ export const handleReviewCommand = async (
         const rating = interaction.options.getInteger("confidence", true);
 
         const page = await learning.pages.getPageBySlug(userId, guildId, topicSlug, sectionSlug, pageSlug);
-        if (!page) return await interaction.reply(`Page "${pageSlug}" not found in section "${sectionSlug}" of topic "${topicSlug}".`);
+        if (!page) return await interaction.reply({
+			embeds: [learningEmbeds.pageNotFound(topicSlug, sectionSlug, pageSlug)],
+			flags: "Ephemeral",
+		});
         await learning.reviews.reviewPage(page.id, userId, guildId, rating, username);
-        return await interaction.reply(`You rated page ID ${page.id} with a rating of ${rating}.`);
+        return await interaction.reply({
+			embeds: [learningEmbeds.ratedPage(
+				page.title,
+				rating
+			)],
+		});
     }
-    return await interaction.reply("Unknown subcommand.");
+    return await interaction.reply({
+		embeds: [learningEmbeds.unknownSubcommand()],
+		flags: "Ephemeral",
+	});
 };

@@ -299,4 +299,32 @@ export const learningEmbeds = {
                 }
             )
             .setFooter(emphasis ? { text: `💡 Emphasis: ${emphasis}` } : null),
+    // =================== REVIEW EMBEDS ===================
+    noDueReviews: () =>
+        baseEmbed()
+            .setColor(EMBED_COLORS.INFO)
+            .setTitle("✅ No Reviews Due")
+            .setDescription("You have no reviews due right now."),
+    nextReview: (pageTitle: string, sectionTitle: string, topicTitle: string, content: string) =>
+        baseEmbed()
+            .setColor(EMBED_COLORS.INFO)
+            .setTitle("🕑 Next Review")
+            .setDescription(`Your next review is for page **${pageTitle}** in section **${sectionTitle}** of topic **${topicTitle}**.`)
+            .addFields({
+                name: "📄 Content",
+                value: content,
+            }),    
+        ratedPage: (pageTitle: string, rating: number) => {
+            const stars = '⭐'.repeat(rating) + '☆'.repeat(5 - rating);
+            return baseEmbed()
+                .setColor(EMBED_COLORS.SUCCESS)
+                .setTitle("✅ Page Rated")
+                .setDescription(`You have rated page **${pageTitle}** with a confidence rating of **${rating}/5**.`)
+                .addFields({
+                    name: "⭐ Confidence Level",
+                    value: `${stars} (${rating}/5)`,
+                    inline: true,
+                })
+                .setFooter({ text: "Keep reviewing to improve your knowledge retention!" });
+        },
 };
