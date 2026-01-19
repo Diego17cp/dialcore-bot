@@ -1,5 +1,8 @@
 import { ChatInputCommandInteraction } from "discord.js";
 import { LearningService } from "../services";
+import { learningEmbeds } from "@/ui";
+import { slugify } from "../utils/learning.utils";
+import { title } from "node:process";
 
 const learning = new LearningService();
 
@@ -17,6 +20,14 @@ export const handlePageCommand = async (
 		const title = interaction.options.getString("title", true);
 		const content = interaction.options.getString("content", true);
 		const emphasis = interaction.options.getString("emphasis", false) || null;
+        if (!await learning.topics.getTopicBySlug(userId, guildId, topic)) return await interaction.reply({
+            embeds: [learningEmbeds.topicNotFound(topic)],
+            flags: "Ephemeral"
+        })
+        if (!await learning.sections.getSectionBySlug(userId, guildId, topic, section)) return await interaction.reply({
+            embeds: [learningEmbeds.sectionNotFound(section, topic)],
+            flags: "Ephemeral"
+        })
 		await learning.pages.createPage(
 			userId,
 			guildId,
@@ -26,7 +37,9 @@ export const handlePageCommand = async (
 			content,
 			emphasis,
 		);
-        return await interaction.reply(`Page "${title}" created in section "${section}" of topic "${topic}".`);
+        return await interaction.reply({
+            embeds: [learningEmbeds.pageCreated(title, slugify(title), section, topic)],
+        });
 	}
     if (sub === "update") {
         const pageSlug = interaction.options.getString("page", true);
@@ -34,9 +47,7 @@ export const handlePageCommand = async (
         const newContent = interaction.options.getString("content", false);
         const newEmphasis = interaction.options.getString("emphasis", false) || null;
         const page = await learning.pages.getPageBySlug(userId, guildId, topic, section, pageSlug);
-        if (!page) {
-            return await interaction.reply(`Page "${pageSlug}" not found in section "${section}" of topic "${topic}".`);
-        }
+        if (!page) return await interaction.reply({ embeds: [learningEmbeds.pageNotFound(pageSlug, section, topic)], flags: "Ephemeral" });
         await learning.pages.updatePage(
             page.id,
             userId,
@@ -44,32 +55,59 @@ export const handlePageCommand = async (
             newContent || undefined,
             newEmphasis !== null ? newEmphasis : undefined
         );
-        return await interaction.reply(`Page "${pageSlug}" updated in section "${section}" of topic "${topic}".`);
+        const fields = [];
+        if (newTitle && newTitle !== page.title) {
+            fields.push({ name: "📝 New Title", value: `\`${page.title}\` ➔ \`${newTitle}\`` });
+            fields.push({ name: "📌 New Slug", value: `\`${page.slug}\` ➔ \`${slugify(newTitle)}\`` });
+        }
+        if (newContent && newContent !== page.content) fields.push({ name: "✏️ Content Updated", value: `The content of the page has been updated.` });
+        if (newEmphasis !== null && newEmphasis !== page.emphasis) fields.push({ name: "💡 New Emphasis", value: `\`${page.emphasis || "None"}\` ➔ \`${newEmphasis}\`` });
+
+        return await interaction.reply({
+            embeds: [learningEmbeds.pageUpdated(title, page.slug, fields)],
+        });
     }
     if (sub === "delete") {
         const pageSlug = interaction.options.getString("page", true);
         const page = await learning.pages.getPageBySlug(userId, guildId, topic, section, pageSlug);
-        if (!page) {
-            return await interaction.reply(`Page "${pageSlug}" not found in section "${section}" of topic "${topic}".`);
-        }
+        if (!page) return await interaction.reply({ embeds: [learningEmbeds.pageNotFound(pageSlug, section, topic)], flags: "Ephemeral" });
         await learning.pages.deletePage(page.id, userId);
-        return await interaction.reply(`Page "${pageSlug}" deleted from section "${section}" of topic "${topic}".`);
+        return await interaction.reply({ embeds: [learningEmbeds.pageDeleted(page.title, page.slug)] });
     }
     if (sub === "list") {
         const topicData = await learning.topics.getTopicBySlug(userId, guildId, topic);
-        if (!topicData) {
-            return await interaction.reply(`Topic "${topic}" not found.`);
-        }
+        if (!topicData) return await interaction.reply({ embeds: [learningEmbeds.topicNotFound(topic)], flags: "Ephemeral" });
+        
         const sectionData = await learning.sections.getSectionBySlug(userId, guildId, topic, section);
-        if (!sectionData) {
-            return await interaction.reply(`Section "${section}" not found in topic "${topic}".`);
-        }
+        if (!sectionData) return await interaction.reply({ embeds: [learningEmbeds.sectionNotFound(section, topic)], flags: "Ephemeral" });
         const pages = await learning.pages.getPagesBySection(sectionData.id);
-        if (pages.length === 0) {
-            return await interaction.reply(`No pages found in section "${section}" of topic "${topic}".`);
-        }
-        const pageList = pages.map(pg => `- ${pg.title} (slug: ${pg.slug})`).join("\n");
-        return await interaction.reply(`Pages in section "${section}" of topic "${topic}":\n${pageList}`);
+        if (pages.length === 0) return await interaction.reply({ embeds: [learningEmbeds.noPagesInSection(section, topic)], flags: "Ephemeral" });
+        const pageList = pages.map(pg => `• **${pg.title}** (\`${pg.slug}\`)`).join("\n");
+        return await interaction.reply({
+            embeds: [learningEmbeds.pagesList(
+                `📚 All available pages in section **${section}** of topic **${topic}**`,
+                pageList,
+                `Total Pages: ${pages.length}`
+            )],
+        });
     }
-    return await interaction.reply("Unknown subcommand.");
+    if (sub === "read") {
+        const pageSlug = interaction.options.getString("page", true);
+        const page = await learning.pages.getPageBySlug(userId, guildId, topic, section, pageSlug);
+        if (!page) return await interaction.reply({ embeds: [learningEmbeds.pageNotFound(pageSlug, section, topic)], flags: "Ephemeral" });
+        return await interaction.reply({
+            embeds: [learningEmbeds.pageContent(
+                page.title,
+                page.slug,
+                section,
+                topic,
+                page.content,
+                page.emphasis
+            )],
+        });
+    }
+    return await interaction.reply({
+        embeds: [learningEmbeds.unknownSubcommand()],
+        flags: "Ephemeral"
+    });
 };

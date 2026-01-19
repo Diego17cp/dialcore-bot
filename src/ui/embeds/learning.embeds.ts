@@ -238,5 +238,65 @@ export const learningEmbeds = {
         
         return embed;
     },
+    // =================== PAGE EMBEDS ===================
+    pageNotFound: (topicSlug: string, sectionSlug: string, pageSlug: string) =>
+        baseEmbed()
+            .setColor(EMBED_COLORS.ERROR)
+            .setTitle("❌ Page Not Found")
+            .setDescription(`Could not find a page with slug \`${pageSlug}\` in section \`${sectionSlug}\` of topic \`${topicSlug}\`.`),
+    pageCreated: (title: string, slug: string, sectionSlug: string, topicSlug: string) => 
+        baseEmbed()
+            .setColor(EMBED_COLORS.SUCCESS)
+            .setTitle("✅ Page Created Successfully")
+            .setDescription(`**${title}** has been created in section **${sectionSlug}** of topic **${topicSlug}**.`)
+            .addFields({
+                    name: "📌 Slug",
+                    value: `\`${slug}\``,
+                    inline: true,
+                }),
+    pageUpdated: (title: string, slug: string, fields: Array<{ name: string; value: string }>) =>
+        baseEmbed()
+            .setColor(EMBED_COLORS.SUCCESS)
+            .setTitle("✏️ Page Updated")
+            .setDescription(`**${title}** has been updated successfully.`)
+            .addFields(fields)
+            .setFooter({ text: `Slug: ${slug}` }),
+    pageDeleted: (title: string, slug: string) =>
+        baseEmbed()
+            .setColor(EMBED_COLORS.SUCCESS)
+            .setTitle("🗑️ Page Deleted")
+            .setDescription(`**${title}** has been deleted successfully.`)
+            .addFields({
+                name: "📌 Slug",
+                value: `\`${slug}\``,
+                inline: true,
+            }),
+    noPagesInSection: (sectionSlug: string, topicSlug: string) => 
+        baseEmbed()
+            .setColor(EMBED_COLORS.INFO)
+            .setTitle("📄 No Pages Found")
+            .setDescription(`No pages found in section \`${sectionSlug}\` of topic \`${topicSlug}\`. Add one with \`/learn page add <${topicSlug}> <${sectionSlug}> <page info>\`.`),
+    pagesList: (title: string, description: string, footer?: string) => 
+        baseEmbed()
+            .setColor(EMBED_COLORS.INFO)
+            .setTitle(title)
+            .setDescription(description)
+            .setFooter(footer ? { text: footer } : null),
+    pageContent: (title: string, slug: string, sectionSlug: string, topicSlug: string, content: string, emphasis: string | null) => 
+        baseEmbed()
+            .setColor(EMBED_COLORS.INFO)
+            .setTitle(`📄 ${title}`)
+            .setDescription(`Part of section \`${sectionSlug}\` in topic \`${topicSlug}\``)
+            .addFields(
+                {
+                    name: "📌 Slug",
+                    value: `\`${slug}\``,
+                    inline: true,
+                },
+                {
+                    name: "📝 Content",
+                    value: content,
+                }
+            )
+            .setFooter(emphasis ? { text: `💡 Emphasis: ${emphasis}` } : null),
 };
-
