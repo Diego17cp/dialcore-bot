@@ -2,29 +2,12 @@ import { baseEmbed } from "./base.embed";
 import { EMBED_COLORS } from "../colors";
 
 export const learningEmbeds = {
-    permissionDenied: () => 
-        baseEmbed()
-            .setColor(EMBED_COLORS.ERROR)
-            .setTitle("❌ Permission Denied")
-            .setDescription("You do not have permission to perform this action."),
+    // =================== TOPIC EMBEDS ===================
     topicNotFound: (slug: string) =>
         baseEmbed()
             .setColor(EMBED_COLORS.ERROR)
             .setTitle("❌ Topic Not Found")
             .setDescription(`Could not find a topic with slug \`${slug}\``),
-
-    serverContextRequired: () =>
-        baseEmbed()
-            .setColor(EMBED_COLORS.WARNING)
-            .setTitle("⚠️ Server Context Required")
-            .setDescription("This command can only be used in a server."),
-
-    unknownSubcommand: () =>
-        baseEmbed()
-            .setColor(EMBED_COLORS.ERROR)
-            .setTitle("❌ Unknown Subcommand")
-            .setDescription("The subcommand you used is not recognized."),
-
     topicCreated: (title: string, slug: string, scopeEmoji: string, scopeName: string, description: string | null, ownerInfo: string) =>
         baseEmbed()
             .setColor(EMBED_COLORS.SUCCESS)
