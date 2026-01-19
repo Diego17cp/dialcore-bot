@@ -3,6 +3,7 @@ import { handlePageCommand } from "./page.commands";
 import { handleReviewCommand } from "./review.comands";
 import { handleSectionCommand } from "./section.commands";
 import { handleTopicCommand } from "./topic.command";
+import { sharedEmbeds } from "@/ui";
 
 export const handleLearnCommand = async (
     interaction: ChatInputCommandInteraction,
@@ -23,6 +24,8 @@ export const handleLearnCommand = async (
         }
     } catch (error) {
         console.error(error);
-        return await interaction.reply("An error occurred while processing the command.");
+        return await interaction.reply({
+            embeds: [sharedEmbeds.errorCommand()]
+        });
     }
 }

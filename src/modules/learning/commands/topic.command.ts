@@ -1,7 +1,7 @@
 import { ChatInputCommandInteraction } from "discord.js";
 import { LearningService } from "../services";
 import { isBotAdmin } from "@/core/utils";
-import { learningEmbeds } from "@/ui";
+import { learningEmbeds, sharedEmbeds } from "@/ui";
 import { slugify } from "../utils/learning.utils";
 
 const learning = new LearningService();
@@ -20,7 +20,7 @@ export const handleTopicCommand = async(interaction: ChatInputCommandInteraction
 
         if (makeGlobal && !isBotAdmin(userId)){
             return interaction.reply({
-                embeds: [learningEmbeds.permissionDenied()],
+                embeds: [sharedEmbeds.permissionDenied()],
                 flags: "Ephemeral"
             });
         }
@@ -53,7 +53,7 @@ export const handleTopicCommand = async(interaction: ChatInputCommandInteraction
             const globalTopics = await learning.topics.getGlobalTopics();
             if (scope === 'server') {
                 return interaction.reply({
-                    embeds: [learningEmbeds.serverContextRequired()],
+                    embeds: [sharedEmbeds.serverContextRequired()],
                     flags: "Ephemeral" 
                 });
             }
@@ -248,7 +248,7 @@ export const handleTopicCommand = async(interaction: ChatInputCommandInteraction
         });
     }
     return interaction.reply({
-        embeds: [learningEmbeds.unknownSubcommand()],
+        embeds: [sharedEmbeds.unknownSubcommand()],
         flags: "Ephemeral" 
     });
 };

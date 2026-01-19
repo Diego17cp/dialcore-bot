@@ -1,6 +1,6 @@
 import { ChatInputCommandInteraction } from "discord.js";
 import { LearningService } from "../services";
-import { learningEmbeds } from "@/ui";
+import { learningEmbeds, sharedEmbeds } from "@/ui";
 
 const learning = new LearningService();
 
@@ -50,7 +50,7 @@ export const handleReviewCommand = async (
 		});
     }
     return await interaction.reply({
-		embeds: [learningEmbeds.unknownSubcommand()],
+		embeds: [sharedEmbeds.unknownSubcommand()],
 		flags: "Ephemeral",
 	});
 };
