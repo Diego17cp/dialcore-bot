@@ -1,21 +1,20 @@
 import { DatabaseConnection, env } from "@/config";
 import { Client } from "discord.js";
 import { baseEmbed } from "@/ui";
-
+import { UserSettingsService } from "@/modules/users";
 
 const db = DatabaseConnection.getInstance().getClient();
+const userSettingsService = new UserSettingsService();
 
 const lastNotificationTime = new Map<string, Date>();
 
 const interval = env.NODE_ENV === "development"
-	? 1000 * 60 // Every 5 minutes in development
-	: 1000 * 60 * 60; // Every 1 hours in production
+        ? 1000 * 60 // 1 minute in dev
+        : 1000 * 60 * 60; // 1 hour in production
 
 export const startReviewScheduler = (client: Client) => {
     console.log("Review scheduler started.");
-    setInterval(async () => await sendDailyReviewReminders(client),
-        interval,
-    );
+    setInterval(async () => await sendDailyReviewReminders(client),interval);
     setTimeout(() => sendDailyReviewReminders(client), 5000);
 };
 
@@ -37,11 +36,7 @@ const sendDailyReviewReminders = async (client: Client) => {
                     },
                 },
             },
-            User: {
-                include: {
-                    UserSettings: true,
-                },
-            },
+            User: true,
         },
     });
     const reviewsByUser = new Map<string, typeof pendingReviews>();
@@ -51,10 +46,9 @@ const sendDailyReviewReminders = async (client: Client) => {
     }
     for (const [userId, userReviews] of reviewsByUser) {
         try {
-            const firstReview = userReviews[0];
-            const notificationsEnabled = firstReview?.User.UserSettings?.notificationsEnabled ?? true;
-            if (!notificationsEnabled) {
-                console.log(`Skipping notification for user ${userId} (notifications disabled)`);
+            const userSettings = await userSettingsService.getSettingsForUser(userId);
+            if (!userSettings?.notificationsEnabled) {
+                console.log(`⏭️  Skipping notification for user ${userId} (notifications disabled)`);
                 continue;
             }
             const lastNotification = lastNotificationTime.get(userId);
@@ -62,11 +56,10 @@ const sendDailyReviewReminders = async (client: Client) => {
                 ? (now.getTime() - lastNotification.getTime()) / (1000 * 60 * 60)
                 : 24;
             if (hoursSinceLastNotification < 24) {
-                console.log(`Skipping notification for user ${userId} (notified ${hoursSinceLastNotification.toFixed(1)}h ago)`);
+                console.log(`⏭️  Skipping notification for user ${userId} (notified ${hoursSinceLastNotification.toFixed(1)}h ago)`);
                 continue;
             }
             const user = await client.users.fetch(userId);
-            
             const summaryEmbed = baseEmbed()
                 .setTitle("📚 Daily Review Reminder")
                 .setDescription(`You have **${userReviews.length}** page(s) ready for review!\n\u200B`);
@@ -76,7 +69,6 @@ const sendDailyReviewReminders = async (client: Client) => {
                 const section = review.LearningPage.LearningSection?.title || "Unknown";
                 const page = review.LearningPage.title;
                 const daysOverdue = Math.floor((now.getTime() - review.nextReviewAt!.getTime()) / (1000 * 60 * 60 * 24));
-                
                 const urgency = daysOverdue > 7 ? "🔴" : daysOverdue > 3 ? "🟡" : "🟢";
                 summaryEmbed.addFields({
                     name: `${urgency} ${topic} › ${section}`,
@@ -104,7 +96,7 @@ const sendDailyReviewReminders = async (client: Client) => {
                         "• `/settings notifications off` - Disable reminders",
                 }
             );
-            await user.send({ embeds: [summaryEmbed] });            
+            await user.send({ embeds: [summaryEmbed] });
             lastNotificationTime.set(userId, now);
             console.log(`✅ Sent review reminder to user ${userId} (${userReviews.length} pending reviews)`);
         } catch (error) {
@@ -114,6 +106,5 @@ const sendDailyReviewReminders = async (client: Client) => {
             );
         }
     }
-    
     console.log(`Review scheduler check completed at ${now.toISOString()}`);
 };
