@@ -164,8 +164,8 @@ export const learnCommand = new SlashCommandBuilder()
             )
             .addSubcommand((sub) =>
                 sub
-                    .setName("view")
-                    .setDescription("View a specific page")
+                    .setName("read")
+                    .setDescription("Read a specific page")
                     .addStringOption(topicOption)
                     .addStringOption(sectionOption)
                     .addStringOption(pageOption)
