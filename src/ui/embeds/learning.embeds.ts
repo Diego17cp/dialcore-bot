@@ -141,5 +141,102 @@ export const learningEmbeds = {
         });
         return embed;
     },
+    // =================== SECTION EMBEDS ===================
+    sectionNotFound: (topicSlug: string, sectionSlug: string) =>
+        baseEmbed()
+            .setColor(EMBED_COLORS.ERROR)
+            .setTitle("❌ Section Not Found")
+            .setDescription(`Could not find a section with slug \`${sectionSlug}\` in topic \`${topicSlug}\`.`),
+    noSectionsInTopic: (topicSlug: string) => 
+        baseEmbed()
+            .setColor(EMBED_COLORS.INFO)
+            .setTitle("📂 No Sections Found")
+            .setDescription(`No sections found in topic \`${topicSlug}\`. Add one with \`/learn section add ${topicSlug} <section info>\`.`),
+    sectionCreated: (title: string, slug: string, topicSlug: string, topicName: string) =>
+        baseEmbed()
+            .setColor(EMBED_COLORS.SUCCESS)
+            .setTitle("✅ Section Created Successfully")
+            .setDescription(`**${title}** has been created in topic **${topicName}**(${topicSlug}).`)
+            .addFields(
+                {
+                    name: "📌 Slug",
+                    value: `\`${slug}\``,
+                    inline: true,
+                },
+            )
+            .setFooter({ text: `Use /learn page add <${topicSlug}> <${slug}> <page info> to add a new page to this section.` }),
+    sectionDeleted: (title: string, slug: string) =>
+        baseEmbed()
+            .setColor(EMBED_COLORS.SUCCESS)
+            .setTitle("🗑️ Section Deleted")
+            .setDescription(`**${title}** has been deleted successfully.`)
+            .addFields({
+                name: "📌 Slug",
+                value: `\`${slug}\``,
+                inline: true,
+            }),
+    sectionUpdated: (title: string, slug: string, fields: Array<{ name: string; value: string }>) =>
+        baseEmbed()
+            .setColor(EMBED_COLORS.SUCCESS)
+            .setTitle("✏️ Section Updated")
+            .setDescription(`**${title}** has been updated successfully.`)
+            .addFields(fields)
+            .setFooter({ text: `Slug: ${slug}` }),
+    sectionsList: (title: string, description: string, footer?: string) => 
+        baseEmbed()
+            .setColor(EMBED_COLORS.INFO)
+            .setTitle(title)
+            .setDescription(description)
+            .setFooter(footer ? { text: footer } : null),
+    sectionView: (
+        title: string, 
+        slug: string, 
+        topicTitle: string,
+        topicSlug: string,
+        pages: Array<{ title: string; slug: string }>,
+        totalPages: number
+    ) => {
+        const embed = baseEmbed()
+            .setColor(EMBED_COLORS.INFO)
+            .setTitle(`📑 ${title}`)
+            .setDescription(`Part of topic: **${topicTitle}** (\`${topicSlug}\`)`)
+            .addFields(
+                {
+                    name: "📌 Slug",
+                    value: `\`${slug}\``,
+                    inline: true,
+                },
+                {
+                    name: "📄 Total Pages",
+                    value: `${totalPages}`,
+                    inline: true,
+                }
+            );
+        
+        if (pages.length === 0) {
+            embed.addFields({
+                name: "📄 Pages",
+                value: "*No pages yet. Create one with `/learn page add`*"
+            });
+        } else {
+            const pagesList = pages
+                .slice(0, 10)
+                .map(p => `• **${p.title}** (\`${p.slug}\`)`)
+                .join("\n");
+            
+            embed.addFields({
+                name: `📄 Pages (${pages.length})`,
+                value: pagesList + (pages.length > 10 ? `\n*...and ${pages.length - 10} more*` : "")
+            });
+        }
+        
+        embed.setFooter({ 
+            text: pages.length > 0 
+                ? `Use /learn page read ${topicSlug} ${slug} <page> to read content` 
+                : `Use /learn page add ${topicSlug} ${slug} <page info> to add your first page`
+        });
+        
+        return embed;
+    },
 };
 
