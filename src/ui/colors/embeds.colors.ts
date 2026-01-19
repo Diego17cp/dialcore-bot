@@ -1,0 +1,6 @@
+export const EMBED_COLORS = {
+	SUCCESS: 0x57f287,
+	ERROR: 0xed4245,
+	INFO: 0x5865f2,
+	WARNING: 0xfee75c,
+};
