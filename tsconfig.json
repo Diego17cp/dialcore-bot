@@ -1,6 +1,10 @@
 {
   // Visit https://aka.ms/tsconfig to read more about this file
   "compilerOptions": {
+    "typeRoots": [
+      "./node_modules/@types",
+      "./src/types"
+    ],
     // File Layout
     "rootDir": ".",
     "baseUrl": ".",
@@ -48,5 +52,9 @@
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true,
-  }
+  },
+  "include": [
+    "src/**/*",
+    "src/types/**/*.d.ts"
+  ]
 }
