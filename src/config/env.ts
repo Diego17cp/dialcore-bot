@@ -8,4 +8,5 @@ export const env = {
     APP_ID: process.env.APP_ID || "",
     NODE_ENV: process.env.NODE_ENV || "development",
     ADMIN_USER_IDS: process.env.ADMIN_USER_IDS ? process.env.ADMIN_USER_IDS.split(",") : [],
+    DOCS_URL: process.env.DOCS_URL || "https://dialcore.vercel.app",
 }
