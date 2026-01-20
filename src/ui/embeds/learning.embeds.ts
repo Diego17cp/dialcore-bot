@@ -2,6 +2,11 @@ import { baseEmbed } from "./base.embed";
 import { EMBED_COLORS } from "../colors";
 
 export const learningEmbeds = {
+    learningDisabled: () =>
+        baseEmbed()
+            .setColor(EMBED_COLORS.WARNING)
+            .setTitle("⚠️ Learning Module Disabled")
+            .setDescription("The learning module is currently disabled for this server. Please contact an administrator to enable it."),
     // =================== TOPIC EMBEDS ===================
     topicNotFound: (slug: string) =>
         baseEmbed()

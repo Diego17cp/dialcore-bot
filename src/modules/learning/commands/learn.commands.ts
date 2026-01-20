@@ -3,12 +3,25 @@ import { handlePageCommand } from "./page.commands";
 import { handleReviewCommand } from "./review.comands";
 import { handleSectionCommand } from "./section.commands";
 import { handleTopicCommand } from "./topic.command";
-import { sharedEmbeds } from "@/ui";
+import { learningEmbeds, sharedEmbeds } from "@/ui";
+import { GuildSettingsService } from "@/modules/guilds";
+
+const guildSettingsService = new GuildSettingsService();
 
 export const handleLearnCommand = async (
     interaction: ChatInputCommandInteraction,
 ) => {
+    const guildId = interaction.guildId;
     const sub = interaction.options.getSubcommandGroup()
+    if (guildId) {
+        const settings = await guildSettingsService.getSettingsForGuild(guildId);
+        if (!settings?.learningEnabled) {
+            return await interaction.reply({
+                embeds: [learningEmbeds.learningDisabled()],
+                flags: "Ephemeral",
+            });
+        }
+    }
     try {
         switch (sub) {
             case "topic":
