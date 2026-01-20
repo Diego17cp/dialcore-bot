@@ -9,7 +9,6 @@ export class GuildSettingsService {
     async upsertSettingsForGuild(
         guildId: string,
         settings: {
-            prefix: string;
             language: string;
             learningEnabled: boolean;
             pomodoroEnabled: boolean;

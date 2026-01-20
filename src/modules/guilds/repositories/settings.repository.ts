@@ -13,7 +13,6 @@ export class GuildSettingsRepository {
 	async upsertSettingsForGuild(
 		guildId: string,
 		settings: {
-			prefix: string;
 			language: string;
 			learningEnabled: boolean;
 			pomodoroEnabled: boolean;
@@ -22,14 +21,12 @@ export class GuildSettingsRepository {
 		return await this.db.guildConfig.upsert({
 			where: { guildId },
 			update: {
-				prefix: settings.prefix,
 				language: settings.language,
 				learningEnabled: settings.learningEnabled,
 				pomodoroEnabled: settings.pomodoroEnabled,
 			},
 			create: {
 				guildId,
-				prefix: settings.prefix,
 				language: settings.language,
 				learningEnabled: settings.learningEnabled,
 				pomodoroEnabled: settings.pomodoroEnabled,

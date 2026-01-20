@@ -2,7 +2,6 @@ import { getLanguageLabel, getTimezoneLabel } from "@/modules/settings";
 import { baseEmbed } from "./base.embed";
 
 export const buildGuildSettingsEmbed = (settings: {
-	prefix: string;
 	language: string;
 	learningEnabled: boolean;
 	pomodoroEnabled: boolean;
@@ -10,11 +9,6 @@ export const buildGuildSettingsEmbed = (settings: {
 	baseEmbed()
 		.setTitle("🏠 Server Settings")
         .addFields(
-            {
-                name: "🔤 Prefix",
-                value: `\`${settings.prefix}\``,
-                inline: true,
-            },
             {
                 name: "🌍 Language",
                 value: getLanguageLabel(settings.language),

@@ -1,46 +1,10 @@
-import { StringSelectMenuInteraction, ModalSubmitInteraction } from "discord.js";
+import { StringSelectMenuInteraction } from "discord.js";
 import { GuildSettingsService } from "../guilds";
 import { UserSettingsService } from "../users";
-import { buildBooleanToggleMenu, buildEnumMenu, buildPrefixInput } from "./settings.components";
+import { buildBooleanToggleMenu, buildEnumMenu } from "./settings.components";
 
 const guildSettingsService = new GuildSettingsService();
 const userSettingsService = new UserSettingsService();
-
-export const handleSettingsModal = async (
-    interaction: ModalSubmitInteraction,
-) => {
-    const [_, __, action] = interaction.customId.split(":");
-    
-    if (action === "prefix") {
-        const newPrefix = interaction.fields.getTextInputValue("settings:guild:prefix");        
-        if (!newPrefix || newPrefix.length > 5) {
-            return interaction.reply({
-                content: "❌ Prefix must be 1-5 characters long.",
-                flags: "Ephemeral",
-            });
-        }
-        const currentSettings = await guildSettingsService.getSettingsForGuild(interaction.guildId!);
-        await guildSettingsService.upsertSettingsForGuild(
-            interaction.guildId!,
-            {
-                prefix: newPrefix,
-                language: currentSettings?.language || "en",
-                learningEnabled: currentSettings?.learningEnabled || false,
-                pomodoroEnabled: currentSettings?.pomodoroEnabled || false,
-            },
-        );
-        
-        return interaction.reply({
-            content: `🔤 Prefix updated to \`${newPrefix}\``,
-            flags: "Ephemeral",
-        });
-    }
-    
-    return interaction.reply({
-        content: "❌ Unknown modal action",
-        flags: "Ephemeral",
-    });
-};
 export const handleSettingsHandlers = async (
     interaction: StringSelectMenuInteraction,
 ) => {
@@ -107,19 +71,6 @@ export const handleSettingsHandlers = async (
                 ],
             });
         }
-        if (interaction.values[0] === "prefix") {
-            const currentPrefix = (await guildSettingsService.getSettingsForGuild(interaction.guildId!))?.prefix || "/";
-            return interaction.showModal({
-                customId: "settings:guild:prefix",
-                title: "Set Prefix",
-                components: [
-                    buildPrefixInput(
-                        `settings:guild:prefix`,
-                        currentPrefix,
-                    ),
-                ],
-            });
-        }
     }
     if (action === "booleans") {
         const selected = new Set(interaction.values);
@@ -131,7 +82,6 @@ export const handleSettingsHandlers = async (
             await guildSettingsService.upsertSettingsForGuild(
                 interaction.guildId!,
                 {
-                    prefix: currentSettings?.prefix || "!",
                     language: currentSettings?.language || "en",
                     learningEnabled: selected.has("learningEnabled"),
                     pomodoroEnabled: selected.has("pomodoroEnabled"),
@@ -165,7 +115,6 @@ export const handleSettingsHandlers = async (
             await guildSettingsService.upsertSettingsForGuild(
                 interaction.guildId!,
                 {
-                    prefix: currentSettings?.prefix || "!",
                     language: interaction.values[0] || "en",
                     learningEnabled: currentSettings?.learningEnabled || false,
                     pomodoroEnabled: currentSettings?.pomodoroEnabled || false,
@@ -203,25 +152,6 @@ export const handleSettingsHandlers = async (
         });
         return interaction.reply({
             content: "🕒 Timezone updated",
-            flags: "Ephemeral",
-        });
-    }
-    if (action === "prefix") {
-        const newPrefix = interaction.values[0];
-        const currentSettings = await guildSettingsService.getSettingsForGuild(
-            interaction.guildId!,
-        );
-        await guildSettingsService.upsertSettingsForGuild(
-            interaction.guildId!,
-            {
-                prefix: newPrefix || "/",
-                language: currentSettings?.language || "en",
-                learningEnabled: currentSettings?.learningEnabled || false,
-                pomodoroEnabled: currentSettings?.pomodoroEnabled || false,
-            },
-        );
-        return interaction.reply({
-            content: `🔤 Prefix updated to \`${newPrefix}\``,
             flags: "Ephemeral",
         });
     }

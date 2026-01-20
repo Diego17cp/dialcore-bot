@@ -1,4 +1,4 @@
-import { ActionRowBuilder, StringSelectMenuBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
+import { ActionRowBuilder, StringSelectMenuBuilder } from "discord.js";
 import { getBooleanLabel, getLanguageLabel, getTimezoneLabel } from "./settings.utils";
 
 export const buildSettingsMenu = (scope: "user" | "guild") => {
@@ -12,7 +12,6 @@ export const buildSettingsMenu = (scope: "user" | "guild") => {
                         ? [
                                 { label: "🔧 Toggles", value: "booleans", description: "Enable/disable features" },
                                 { label: "🌍 Language", value: "language", description: "Server language" },
-                                { label: "🔤 Prefix", value: "prefix", description: "Command prefix" },
                             ]
                         : [
                                 { label: "🔧 Toggles", value: "booleans", description: "Enable/disable features" },
@@ -65,18 +64,3 @@ export const buildEnumMenu = (
             ),
     );
 };
-
-export const buildPrefixInput = (
-    customId: string,
-    currentPrefix: string,
-) =>
-    new ActionRowBuilder<TextInputBuilder>().addComponents(
-        new TextInputBuilder()
-            .setCustomId(customId)
-            .setLabel("New Prefix")
-            .setStyle(TextInputStyle.Short)
-            .setValue(currentPrefix)
-            .setRequired(true)
-            .setMaxLength(5)
-            .setPlaceholder("Enter new prefix (1-5 characters)"),
-    );
