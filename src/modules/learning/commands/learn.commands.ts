@@ -20,7 +20,10 @@ export const handleLearnCommand = async (
             case "review":
                 return await handleReviewCommand(interaction);
             default:
-                return await interaction.reply("Unknown subcommand group.");
+                return await interaction.reply({
+                    embeds: [sharedEmbeds.unknownSubcommand()],
+                    flags: "Ephemeral",
+                });
         }
     } catch (error) {
         console.error(error);
