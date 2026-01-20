@@ -2,7 +2,6 @@ import { ChatInputCommandInteraction } from "discord.js";
 import { LearningService } from "../services";
 import { learningEmbeds, sharedEmbeds } from "@/ui";
 import { slugify } from "../utils/learning.utils";
-import { title } from "node:process";
 
 const learning = new LearningService();
 
@@ -64,7 +63,7 @@ export const handlePageCommand = async (
         if (newEmphasis !== null && newEmphasis !== page.emphasis) fields.push({ name: "💡 New Emphasis", value: `\`${page.emphasis || "None"}\` ➔ \`${newEmphasis}\`` });
 
         return await interaction.reply({
-            embeds: [learningEmbeds.pageUpdated(title, page.slug, fields)],
+            embeds: [learningEmbeds.pageUpdated(page.title, page.slug, fields)],
         });
     }
     if (sub === "delete") {
