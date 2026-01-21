@@ -4,6 +4,7 @@ import {
 	settingsCommand,
 	helpCommand,
 	devCommand,
+	pomodoroCommand,
 	setCommandId,
 } from "@/commands";
 import { env } from "@/config";
@@ -17,6 +18,7 @@ export async function registerCommands() {
 			settingsCommand.toJSON(),
 			helpCommand.toJSON(),
 			devCommand.toJSON(),
+			pomodoroCommand.toJSON(),
 		],
 	});
 	for (const cmd of commands as { name: string; id: string }[]) {
