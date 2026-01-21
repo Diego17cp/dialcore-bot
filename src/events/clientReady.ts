@@ -1,8 +1,11 @@
 import { Client } from "discord.js";
-import { startReviewScheduler } from "@/core";
+import { scheduler } from "@/core";
+
+import "@/modules/learning/learning.scheduler";
+import "@/modules/pomodoro/pomodoro.scheduler";
 
 export const handleClientReady = (client: Client) => {
 	console.log(`Logged in as ${client.user?.tag}`);
 	console.log(`Serving ${client.guilds.cache.size} guild(s)`);
-	startReviewScheduler(client);
+	scheduler.start();
 };
