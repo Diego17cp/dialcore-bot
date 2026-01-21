@@ -80,6 +80,29 @@ export const commandRegistry: CommandMeta[] = [
 			},
 		],
 	},
+	{
+		name: "dev",
+		description: "Developer tools and utilities",
+		category: "Developer",
+		subcommands: [
+			{
+				name: "profile",
+				description: "View GitHub profile information",
+			},
+			{
+				name: "repos",
+				description: "List GitHub repositories for a user",
+			},
+			{
+				name: "repo",
+				description: "Get details about a specific repository",
+			},
+			{
+				name: "stats",
+				description: "View GitHub user statistics",
+			}
+		]
+	}
 ];
 
 const countCommandsInCategory = (category: string): number => {
@@ -104,15 +127,19 @@ const categoryStats = Object.fromEntries(
     ])
 );
 const totalCommands = commandRegistry.length;
+const totalSubcommandsLevel1 = commandRegistry.reduce(
+    (sum, cmd) => sum + (cmd.subcommands?.length ?? 0),
+    0,
+);
 const deepCount = commandRegistry.reduce((sum, cmd) => {
-	return (
-		sum +
-		(cmd.subcommands?.reduce(
-			(s, sc) => s + (sc.subcommands?.length ?? 0),
-			0,
-		) ?? 0)
-	);
-}, 0);
+    return (
+        sum +
+        (cmd.subcommands?.reduce(
+            (s, sc) => s + (sc.subcommands?.length ?? 0),
+            0,
+        ) ?? 0)
+    );
+}, 0)
 export const getCommandsBySection = (sectionName: string): {command: string; description: string}[] => {
     const command = commandRegistry.find(cmd => cmd.name === sectionName);
     if (!command) return [];
@@ -133,7 +160,7 @@ export const getCommandsBySection = (sectionName: string): {command: string; des
 };
 export const getRegistryStats = () => ({
     totalCommands,
-    totalSubcommands: deepCount,
+    totalSubcommands: totalSubcommandsLevel1 + deepCount,
     categoryStats,
 });
 export const commandIds = new Map<string, string>();

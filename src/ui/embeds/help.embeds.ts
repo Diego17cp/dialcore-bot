@@ -35,7 +35,7 @@ export const buildHelpEmbed = (stats: {
 		.setDescription(
 			`» **Help menu**\n` +
 				`I have **${stats.totalCommands} categories** and ` +
-				`**${stats.totalCommands + stats.totalSubcommands} commands** to explore.`,
+				`**${stats.totalSubcommands} commands** to explore.`,
 		)
 		.addFields({
 			name: "» Categories",
