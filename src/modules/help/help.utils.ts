@@ -3,6 +3,7 @@ export const getCommandLabel = (category: string): string => {
         learn: "📚 Learning",
         settings: "⚙️ Configuration",
         dev: "🛠️ Developer",
+        pomodoro: "⏲️ Pomodoro",
     };
     
     return labels[category.toLowerCase()] || category.charAt(0).toUpperCase() + category.slice(1);
@@ -13,6 +14,7 @@ export const getCommandDescription = (category: string): string => {
         learn: "Manage your learning journey with topics, sections, pages, and spaced repetition reviews",
         settings: "Customize bot behavior with user preferences and server-wide configurations",
         dev: "Access developer tools for see stats, repositories, and GitHub profiles",
+        pomodoro: "Boost productivity with Pomodoro timers, task management, and focus sessions",
     };
     
     return descriptions[category.toLowerCase()] || `Discover commands in the ${category} category`;

@@ -102,6 +102,21 @@ export const commandRegistry: CommandMeta[] = [
 				description: "View GitHub user statistics",
 			}
 		]
+	},
+	{
+		name: "pomodoro",
+		description: "Manage Pomodoro timers",
+		category: "Productivity",
+		subcommands: [
+			{
+				name: "start",
+				description: "Start a new Pomodoro timer",
+			},
+			{
+				name: "stop",
+				description: "Stop the active Pomodoro timer",
+			}
+		]
 	}
 ];
 
