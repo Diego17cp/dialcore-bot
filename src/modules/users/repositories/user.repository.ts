@@ -21,4 +21,9 @@ export class UserRepository {
 			},
 		});
 	}
+	async findUser (id: string) {
+		return this.db.user.findUnique({
+			where: { id },
+		});
+	}
 }
