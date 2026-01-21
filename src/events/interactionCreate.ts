@@ -3,6 +3,7 @@ import { interactionContextMiddleware } from "@/middlewares";
 import { handleLearnCommand } from "@/modules/learning/commands/learn.commands";
 import { handleSettingsCommand, handleSettingsHandlers } from "@/modules/settings";
 import { handleHelpCommand, handleHelpHandlers } from "@/modules/help";
+import { handleDevCommand } from "@/modules/dev";
 
 export const name = Events.InteractionCreate;
 
@@ -26,6 +27,9 @@ export const handleInteraction = async (interaction: Interaction) => {
             break;
         case "help":
             await handleHelpCommand(interaction);
+            break;
+        case "dev":
+            await handleDevCommand(interaction);
             break;
         default:
             console.warn(`Unknown command: ${interaction.commandName}`);
