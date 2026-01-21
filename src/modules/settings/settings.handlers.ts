@@ -20,6 +20,7 @@ export const handleSettingsHandlers = async (
                         buildBooleanToggleMenu("guild", {
                             learningEnabled: s?.learningEnabled || false,
                             pomodoroEnabled: s?.pomodoroEnabled || false,
+                            devEnabled: s?.devEnabled || false,
                         }),
                     ],
                 });
@@ -85,6 +86,7 @@ export const handleSettingsHandlers = async (
                     language: currentSettings?.language || "en",
                     learningEnabled: selected.has("learningEnabled"),
                     pomodoroEnabled: selected.has("pomodoroEnabled"),
+                    devEnabled: selected.has("devEnabled"),
                 },
             );
         } else {
@@ -118,6 +120,7 @@ export const handleSettingsHandlers = async (
                     language: interaction.values[0] || "en",
                     learningEnabled: currentSettings?.learningEnabled || false,
                     pomodoroEnabled: currentSettings?.pomodoroEnabled || false,
+                    devEnabled: currentSettings?.devEnabled || false,
                 },
             );
         } else {

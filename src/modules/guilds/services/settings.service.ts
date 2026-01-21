@@ -12,6 +12,7 @@ export class GuildSettingsService {
             language: string;
             learningEnabled: boolean;
             pomodoroEnabled: boolean;
+            devEnabled: boolean;
         },
     ) {
         if (!guildId) throw new Error("Guild ID is required to upsert settings.");

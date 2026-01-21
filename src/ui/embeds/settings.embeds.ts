@@ -5,6 +5,7 @@ export const buildGuildSettingsEmbed = (settings: {
 	language: string;
 	learningEnabled: boolean;
 	pomodoroEnabled: boolean;
+    devEnabled: boolean;
 }) =>
 	baseEmbed()
 		.setTitle("🏠 Server Settings")
@@ -19,6 +20,7 @@ export const buildGuildSettingsEmbed = (settings: {
                 value: [
                     settings.learningEnabled ? "📚 Learning: ✅ Enabled" : "📚 Learning: ❌ Disabled",
                     settings.pomodoroEnabled ? "⏱️ Pomodoro: ✅ Enabled" : "⏱️ Pomodoro: ❌ Disabled",
+                    settings.devEnabled ? "🛠️ Developer Mode: ✅ Enabled" : "🛠️ Developer Mode: ❌ Disabled",
                 ].join("\n"),
                 inline: false,
             },

@@ -16,6 +16,7 @@ export class GuildSettingsRepository {
 			language: string;
 			learningEnabled: boolean;
 			pomodoroEnabled: boolean;
+			devEnabled: boolean;
 		},
 	) {
 		return await this.db.guildConfig.upsert({
@@ -24,12 +25,14 @@ export class GuildSettingsRepository {
 				language: settings.language,
 				learningEnabled: settings.learningEnabled,
 				pomodoroEnabled: settings.pomodoroEnabled,
+				devEnabled: settings.devEnabled,
 			},
 			create: {
 				guildId,
 				language: settings.language,
 				learningEnabled: settings.learningEnabled,
 				pomodoroEnabled: settings.pomodoroEnabled,
+				devEnabled: settings.devEnabled,
 			},
             include: {
                 Guild: true,

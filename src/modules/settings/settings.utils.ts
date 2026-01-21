@@ -3,6 +3,7 @@ const getBooleanLabel = (key: string): string => {
     const labels: Record<string, string> = {
         learningEnabled: "📚 Learning Module",
         pomodoroEnabled: "⏱️ Pomodoro Timer",
+        devEnabled: "🛠️ Developer Mode",
         notificationsEnabled: "🔔 Review Notifications",
     };
     return labels[key] || key;
