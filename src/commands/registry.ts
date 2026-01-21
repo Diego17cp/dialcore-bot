@@ -117,6 +117,33 @@ export const commandRegistry: CommandMeta[] = [
 				description: "Stop the active Pomodoro timer",
 			}
 		]
+	},
+	{
+		name: "todo",
+		description: "Manage your to-do list",
+		category: "Productivity",
+		subcommands: [
+			{
+				name: "add",
+				description: "Add a new to-do item",
+			},
+			{
+				name: "list",
+				description: "List your to-do items",
+			},
+			{
+				name: "complete",
+				description: "Mark a to-do item as complete",
+			},
+			{
+				name: "delete",
+				description: "Delete a to-do item",
+			},
+			{
+				name: "update",
+				description: "Update a to-do item",
+			}
+		]
 	}
 ];
 
