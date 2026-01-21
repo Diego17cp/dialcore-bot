@@ -3,4 +3,5 @@ export const EMBED_COLORS = {
 	ERROR: 0xed4245,
 	INFO: 0x5865f2,
 	WARNING: 0xfee75c,
+	GITHUB: 0x24292e,
 };
