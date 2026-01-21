@@ -5,7 +5,7 @@ import { ChatInputCommandInteraction } from "discord.js";
 export const handleReposCommand = async (interaction: ChatInputCommandInteraction) => {
     const username = interaction.options.getString("username", true);
     const data = await getDevRepos(username);
-    return await interaction.reply({
+    return await interaction.editReply({
         embeds: [devEmbeds.devReposEmbed(username, data)],
     })
 }

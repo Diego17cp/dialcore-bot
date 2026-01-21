@@ -5,7 +5,7 @@ import { devEmbeds } from "@/ui";
 export const handleProfileCommand = async (interaction: ChatInputCommandInteraction) => {
     const username = interaction.options.getString("username", true);
     const data = await getDevProfile(username);
-    return await interaction.reply({
+    return await interaction.editReply({
         embeds: [devEmbeds.devProfileEmbed(data)],
     })
 }
