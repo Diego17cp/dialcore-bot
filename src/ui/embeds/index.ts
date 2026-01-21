@@ -5,3 +5,4 @@ export * from './learning.embeds';
 export * from './pomodoro.embeds';
 export * from './settings.embeds';
 export * from './shared.embeds';
+export * from './todo.embeds';

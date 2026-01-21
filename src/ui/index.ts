@@ -6,3 +6,4 @@ export * from './embeds/learning.embeds';
 export * from './embeds/pomodoro.embeds';
 export * from './embeds/settings.embeds';
 export * from './embeds/shared.embeds';
+export * from './embeds/todo.embeds';
