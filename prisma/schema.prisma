@@ -25,6 +25,7 @@ model GuildConfig {
   language        String  @default("en")
   learningEnabled Boolean @default(true) @map("learning_enabled")
   pomodoroEnabled Boolean @default(true) @map("pomodoro_enabled")
+  devEnabled      Boolean @default(true) @map("dev_enabled")
   Guild           Guild   @relation(fields: [guildId], references: [id])
 
   @@map("guild_configs")
