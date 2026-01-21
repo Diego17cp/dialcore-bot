@@ -3,6 +3,11 @@ import { baseEmbed } from "./base.embed";
 import { EMBED_COLORS } from "../colors";
 
 export const devEmbeds = {
+	devDisabled: () =>
+        baseEmbed()
+            .setColor(EMBED_COLORS.WARNING)
+            .setTitle("⚠️ Developer Mode Disabled")
+            .setDescription("The developer mode is currently disabled for this server. Please contact an administrator to enable it."),
 	devProfileEmbed: (profile: GitHubUser) =>
 		baseEmbed()
 			.setColor(EMBED_COLORS.GITHUB)
