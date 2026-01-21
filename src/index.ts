@@ -1,20 +1,12 @@
-import { Client, GatewayIntentBits, Partials } from "discord.js";
 import { DatabaseConnection, env } from "./config";
 import { registerCommands } from "./scripts/register-commands";
 import { handleClientReady, handleInteraction } from "./events";
+import { client } from "./core";
 
 const start = async () => {
     try {
         console.log("Application started.");
         await registerCommands();
-        const client = new Client({
-            intents: [
-                GatewayIntentBits.Guilds,
-                GatewayIntentBits.GuildMessages,
-                GatewayIntentBits.MessageContent
-            ],
-            partials: [Partials.Channel]
-        })
 
         await DatabaseConnection.getInstance().connect();
         console.log(DatabaseConnection.getInstance().getStatus());
