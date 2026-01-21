@@ -64,4 +64,15 @@ export const todoCommand = new SlashCommandBuilder()
                     .setDescription("ID of the to-do item to delete")
                     .setRequired(true),
             )
+    )
+    .addSubcommand((sub) =>
+        sub
+            .setName("complete")
+            .setDescription("Mark a to-do item as completed")
+            .addIntegerOption((option) =>
+                option
+                    .setName("id")
+                    .setDescription("ID of the to-do item to mark as completed")
+                    .setRequired(true),
+            )
     );

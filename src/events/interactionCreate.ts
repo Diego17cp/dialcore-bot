@@ -5,6 +5,7 @@ import { handleSettingsCommand, handleSettingsHandlers } from "@/modules/setting
 import { handleHelpCommand, handleHelpHandlers } from "@/modules/help";
 import { handleDevCommand } from "@/modules/dev";
 import { handlePomodoroCommand } from "@/modules/pomodoro";
+import { handleTodoCommand } from "@/modules/todos";
 
 export const name = Events.InteractionCreate;
 
@@ -34,6 +35,9 @@ export const handleInteraction = async (interaction: Interaction) => {
             break;
         case "pomodoro":
             await handlePomodoroCommand(interaction);
+            break;
+        case "todo":
+            await handleTodoCommand(interaction);
             break;
         default:
             console.warn(`Unknown command: ${interaction.commandName}`);
