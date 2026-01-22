@@ -112,17 +112,6 @@ model Pomodoro {
   @@map("pomodoros")
 }
 
-model Standup {
-  id      Int      @id @default(autoincrement())
-  content String
-  date    DateTime @default(now())
-  userId  String   @map("user_id")
-  guildId String?  @map("guild_id")
-  User    User     @relation(fields: [userId], references: [id])
-
-  @@map("standups")
-}
-
 model Todo {
   id          Int       @id @default(autoincrement())
   guildId     String?   @map("guild_id")
@@ -147,7 +136,6 @@ model User {
   LearningReview LearningReview[]
   LearningTopic  LearningTopic[]
   Pomodoro       Pomodoro[]
-  Standup        Standup[]
   Todo           Todo[]
   UserSettings   UserSettings?
 
