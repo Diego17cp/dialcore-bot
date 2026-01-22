@@ -29,7 +29,6 @@ scheduler.register({
 				learningReviews: await db.learningReview.findMany(),
 				todos: await db.todo.findMany(),
 				pomodoros: await db.pomodoro.findMany(),
-				standups: await db.standup.findMany(),
 			};
             const json = JSON.stringify(backup, null, 2);
             const buffer = Buffer.from(json, "utf-8");
