@@ -12,12 +12,13 @@
       "@/*": ["src/*"],
       "@db/*": ["prisma/*"]
     },
-    // "outDir": "./dist",
+    "outDir": "./dist",
 
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
-    "module": "commonjs",
-    "target": "es2016",
+    "module": "es2022",
+    "moduleResolution": "node",
+    "target": "es2022",
     "types": ["node"],
     "resolveJsonModule": true,
     "esModuleInterop": true,
