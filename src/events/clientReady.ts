@@ -3,6 +3,7 @@ import { scheduler } from "@/core";
 
 import "@/modules/learning/learning.scheduler";
 import "@/modules/pomodoro/pomodoro.scheduler";
+import "@/modules/backups/backups.scheduler";
 
 export const handleClientReady = (client: Client) => {
 	console.log(`Logged in as ${client.user?.tag}`);
